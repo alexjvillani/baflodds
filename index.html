@@ -3,28 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
+    <title>FIFA League Odds</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Welcome to My Website</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+        <h1>FIFA League Odds Calculator</h1>
     </header>
+
     <main>
         <section>
-            <h2>Introduction</h2>
-            <p>This is the home page of my website. Explore the other pages to learn more.</p>
+            <h2>Enter Player Names</h2>
+            <form id="oddsForm">
+                <label for="player1">Player 1:</label>
+                <input type="text" id="player1" name="player1" required><br><br>
+
+                <label for="player2">Player 2:</label>
+                <input type="text" id="player2" name="player2" required><br><br>
+
+                <button type="submit">Calculate Odds</button>
+            </form>
+
+            <div id="result"></div>
         </section>
     </main>
+
     <footer>
-        <p>&copy; 2024 My Website</p>
+        <p>&copy; 2024 FIFA League</p>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
