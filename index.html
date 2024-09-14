@@ -3,35 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIFA League Odds</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Editable Table</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
 </head>
 <body>
-    <header>
-        <h1>FIFA League Odds Calculator</h1>
-    </header>
+    <h1>Editable Table</h1>
 
-    <main>
-        <section>
-            <h2>Enter Player Names</h2>
-            <form id="oddsForm">
-                <label for="player1">Player 1:</label>
-                <input type="text" id="player1" name="player1" required><br><br>
+    <!-- Form for adding and editing players -->
+    <form id="inputForm">
+        <div class="input-group">
+            <label for="playerName">Player:</label>
+            <input type="text" id="playerName" required>
+        </div>
+        <div class="input-group">
+            <label for="wins">Wins:</label>
+            <input type="number" id="wins" required>
+        </div>
+        <div class="input-group">
+            <label for="losses">Losses:</label>
+            <input type="number" id="losses">
+        </div>
+        <div class="input-group">
+            <label for="draws">Draws:</label>
+            <input type="number" id="draws">
+        </div>
+        <div class="input-group">
+            <label for="goalDif">Goal Dif:</label>
+            <input type="number" id="goalDif">
+        </div>
+        <div class="input-group">
+            <label for="div1Wins">Div 1 Wins:</label>
+            <input type="number" id="div1Wins">
+        </div>
+        <div class="input-group">
+            <label for="div2Wins">Div 2 Wins:</label>
+            <input type="number" id="div2Wins">
+        </div>
+        <div class="input-group">
+            <label for="div1Losses">Div 1 Losses:</label>
+            <input type="number" id="div1Losses">
+        </div>
+        <div class="input-group">
+            <label for="div2Losses">Div 2 Losses:</label>
+            <input type="number" id="div2Losses">
+        </div>
+        <div class="input-group">
+            <label for="goalsRatingDiv1">Goals Rating Div 1:</label>
+            <input type="number" id="goalsRatingDiv1">
+        </div>
+        <div class="input-group">
+            <label for="goalsRatingDiv2">Goals Rating Div 2:</label>
+            <input type="number" id="goalsRatingDiv2">
+        </div>
+        <div class="input-group">
+            <label for="goalRating">Goal Rating:</label>
+            <input type="number" id="goalRating">
+        </div>
+        <div class="input-group">
+            <label for="rating">Rating:</label>
+            <input type="number" id="rating">
+        </div>
+        <button type="submit" id="submitButton">Add Entry</button>
+        <button type="button" id="cancelButton" style="display: none;">Cancel</button>
+    </form>
 
-                <label for="player2">Player 2:</label>
-                <input type="text" id="player2" name="player2" required><br><br>
+    <!-- Table for displaying player data -->
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Draws</th>
+                <th>Goal Dif</th>
+                <th>Div 1 Wins</th>
+                <th>Div 2 Wins</th>
+                <th>Div 1 Losses</th>
+                <th>Div 2 Losses</th>
+                <th>Goals Rating Div 1</th>
+                <th>Goals Rating Div 2</th>
+                <th>Goal Rating</th>
+                <th>Rating</th>
+                <th>Actions</th> <!-- Actions column header -->
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Table rows will be inserted here dynamically -->
+        </tbody>
+    </table>
 
-                <button type="submit">Calculate Odds</button>
-            </form>
+    <a href="newform.html">Go to New Form</a> <!-- Link to new form page -->
 
-            <div id="result"></div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 FIFA League</p>
-    </footer>
-
-    <script src="script.js"></script>
+    <script src="scripts.js"></script> <!-- Link to the external JavaScript file -->
 </body>
 </html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Match Form</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
+</head>
+<body>
+    <h1>New Match Form</h1>
+    <form id="matchForm">
+        <div class="input-group">
+            <label for="player1Select">Player 1:</label>
+            <select id="player1Select" required>
+                <option value="">Select Player 1</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="player2Select">Player 2:</label>
+            <select id="player2Select" required>
+                <option value="">Select Player 2</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="player1Score">Player 1 Score:</label>
+            <input type="number" id="player1Score" required>
+        </div>
+        <div class="input-group">
+            <label for="player2Score">Player 2 Score:</label>
+            <input type="number" id="player2Score" required>
+        </div>
+        <div class="input-group">
+            <label for="player1Division">Player 1 Division:</label>
+            <select id="player1Division" required>
+                <option value="Div 1">Division 1</option>
+                <option value="Div 2">Division 2</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="player2Division">Player 2 Division:</label>
+            <select id="player2Division" required>
+                <option value="Div 1">Division 1</option>
+                <option value="Div 2">Division 2</option>
+            </select>
+        </div>
+        <button type="submit">Submit Match</button>
+    </form>
+
+    <a href="index.html">Back to Index</a>
+
+    <script src="newform.js"></script> <!-- Link to the script for newform.html -->
+</body>
+</html>
