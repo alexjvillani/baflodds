@@ -50,9 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.forEach(row => tableBody.appendChild(row)); // Append rows in sorted order
     }
 
-    // Function to initialize pre-populated data
     function initializeData() {
-        const players = [
+        const players = JSON.parse(localStorage.getItem('players'));
+
+        // Only initialize data if localStorage is empty
+        if (!players || players.length === 0) {
+            const initialPlayers = [
             { name: 'Sam', wins: 10, losses: 1, draws: 0, goalDif: 30, div1Wins: 10, div2Wins: 0, div1Losses: 1, div2Losses: 0, goalsRatingDiv1: 28, goalsRatingDiv2: 0, goalRating: 28, rating: 279 },
             { name: 'Dan', wins: 8, losses: 2, draws: 0, goalDif: 24, div1Wins: 3, div2Wins: 5, div1Losses: 1, div2Losses: 1, goalsRatingDiv1: 30, goalsRatingDiv2: 17, goalRating: 47, rating: 246 },
             { name: 'Macca', wins: 9, losses: 1, draws: 1, goalDif: 18, div1Wins: 9, div2Wins: 0, div1Losses: 1, div2Losses: 0, goalsRatingDiv1: 22, goalsRatingDiv2: 0, goalRating: 22, rating: 214 },
@@ -72,11 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: 'David', wins: 1, losses: 6, draws: 1, goalDif: -19, div1Wins: 1, div2Wins: 0, div1Losses: 6, div2Losses: 0, goalsRatingDiv1: -16, goalsRatingDiv2: 2, goalRating: -14, rating: -63 },
             { name: 'Elliot', wins: 1, losses: 8, draws: 1, goalDif: -24, div1Wins: 1, div2Wins: 0, div1Losses: 7, div2Losses: 1, goalsRatingDiv1: -21, goalsRatingDiv2: 3, goalRating: -18, rating: -134 }
         ];
-        localStorage.setItem('players', JSON.stringify(players));
+        localStorage.setItem('players', JSON.stringify(initialPlayers));
     }
-
-    // Function to add a player to the table and localStorage
-    function addPlayer(player) {
+    }
+     // Function to add a player to the table and localStorage
+     function addPlayer(player) {
         const players = JSON.parse(localStorage.getItem('players')) || [];
         players.push(player);
         localStorage.setItem('players', JSON.stringify(players));
@@ -163,6 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         inputForm.reset();
     });
 
-    initializeData(); // Initialize pre-populated data
+    initializeData(); // Initialize pre-populated data only if necessary
     populateTable(); // Populate table with data from localStorage
 });
