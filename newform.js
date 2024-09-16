@@ -71,6 +71,8 @@ document.getElementById('matchForm').addEventListener('submit', event => {
 
         if (player1Division === 'Div 1') player1Obj.div1Wins += 1;
         if (player2Division === 'Div 1') player2Obj.div1Losses += 1;
+        if (player1Division === 'Div 2') player1Obj.div2Wins += 1; // Handle Div 2 Wins
+        if (player2Division === 'Div 2') player2Obj.div2Losses += 1; // Handle Div 2 Losses
 
         player1Obj.rating += 15;
         player2Obj.rating -= 5;
@@ -81,6 +83,8 @@ document.getElementById('matchForm').addEventListener('submit', event => {
 
         if (player2Division === 'Div 1') player2Obj.div1Wins += 1;
         if (player1Division === 'Div 1') player1Obj.div1Losses += 1;
+        if (player2Division === 'Div 2') player2Obj.div2Wins += 1; // Handle Div 2 Wins
+        if (player1Division === 'Div 2') player1Obj.div2Losses += 1; // Handle Div 2 Losses
 
         player2Obj.rating += 15;
         player1Obj.rating -= 5;
