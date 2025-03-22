@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA Power Rankings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        input, select, button {
+            margin: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .form-section {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FIFA Tournament Power Rankings</h1>
+        
+        <div class="form-section">
+            <h2>Enter Match Result</h2>
+            <form id="matchForm">
+                <select id="player1" required>
+                    <option value="">Select Player 1</option>
+                </select>
+                <select id="player2" required>
+                    <option value="">Select Player 2</option>
+                </select><br>
+                <input type="number" id="goals1" placeholder="Player 1 Goals" required>
+                <input type="number" id="goals2" placeholder="Player 2 Goals" required><br>
+                <select id="matchContext" required>
+                    <option value="">Select Match Type</option>
+                </select>
+                <button type="submit">Add Match</button>
+            </form>
+        </div>
+
+        <h2>Current Power Rankings</h2>
+        <table id="rankings">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Rating</th>
+                    <th>Division</th>
+                    <th>Goals Scored</th>
+                    <th>Goals Conceded</th>
+                    <th>W/D/L</th>
+                    <th>Form</th>
+                    <th>Win %</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <h2>Match History</h2>
+        <table id="matchHistory">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Score</th>
+                    <th>Match Type</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div class="button-section">
+            <button id="resetButton">Reset All Rankings</button>
+            <button id="exportButton">Export Data</button>
+            <button id="importButton">Import Data</button>
+            <input type="file" id="importInput" accept=".json" style="display: none;">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
