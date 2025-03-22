@@ -56,6 +56,19 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
+        .prediction-section {
+            background: #e6f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #predictionResult {
+            margin-top: 10px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +91,18 @@
                 </select>
                 <button type="submit">Add Match</button>
             </form>
+        </div>
+
+        <div class="prediction-section">
+            <h2>Match Prediction</h2>
+            <select id="predictPlayer1">
+                <option value="">Select Player 1</option>
+            </select>
+            <select id="predictPlayer2">
+                <option value="">Select Player 2</option>
+            </select>
+            <button id="predictButton">Predict Match</button>
+            <div id="predictionResult"></div>
         </div>
 
         <h2>Current Power Rankings</h2>

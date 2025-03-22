@@ -5,7 +5,7 @@ let players = [
     {name: "Dru", rating: 1000, division: 1, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
     {name: "Brent", rating: 1000, division: 1, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
     {name: "Bass", rating: 1000, division: 1, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
-    {name: "John", rating: 1000, division: 1, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
+    {name: "John", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
     {name: "Lachlan T", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
     {name: "Lachlan W", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
     {name: "Jude", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: []},
@@ -232,16 +232,39 @@ function importData(event) {
     };
     reader.readAsText(file);
 }
+function predictMatch(player1, player2) {
+    const ratingDiff = player2.rating - player1.rating;
+    const expectedScore1 = 1 / (1 + Math.pow(10, ratingDiff / 400));
+    const expectedScore2 = 1 - expectedScore1;
+    
+    const avgGoalsScored1 = player1.goalsScored / (player1.wins + player1.draws + player1.losses) || 0;
+    const avgGoalsScored2 = player2.goalsScored / (player2.wins + player2.draws + player2.losses) || 0;
+    
+    const expectedGoals1 = avgGoalsScored1 * expectedScore1 * 2;
+    const expectedGoals2 = avgGoalsScored2 * expectedScore2 * 2;
+    
+    return {
+        player1ExpectedGoals: expectedGoals1.toFixed(2),
+        player2ExpectedGoals: expectedGoals2.toFixed(2),
+        player1WinProbability: (expectedScore1 * 100).toFixed(2) + '%',
+        player2WinProbability: (expectedScore2 * 100).toFixed(2) + '%',
+        drawProbability: ((1 - Math.abs(expectedScore1 - expectedScore2)) * 100).toFixed(2) + '%'
+    };
+}
 
 function init() {
     loadData();
     
     const player1Select = document.getElementById('player1');
     const player2Select = document.getElementById('player2');
+    const predictPlayer1Select = document.getElementById('predictPlayer1');
+    const predictPlayer2Select = document.getElementById('predictPlayer2');
     
     // Clear existing options
     player1Select.innerHTML = '<option value="">Select Player 1</option>';
     player2Select.innerHTML = '<option value="">Select Player 2</option>';
+    predictPlayer1Select.innerHTML = '<option value="">Select Player 1</option>';
+    predictPlayer2Select.innerHTML = '<option value="">Select Player 2</option>';
     
     // Populate player dropdowns
     players.forEach(player => {
@@ -254,6 +277,11 @@ function init() {
         option2.value = player.name;
         option2.textContent = `${player.name} (Div ${player.division})`;
         player2Select.appendChild(option2);
+
+        const predictOption1 = option1.cloneNode(true);
+        const predictOption2 = option2.cloneNode(true);
+        predictPlayer1Select.appendChild(predictOption1);
+        predictPlayer2Select.appendChild(predictOption2);
     });
     
     const matchContextSelect = document.getElementById('matchContext');
@@ -268,6 +296,26 @@ function init() {
     document.getElementById('exportButton').addEventListener('click', exportData);
     document.getElementById('importButton').addEventListener('click', () => document.getElementById('importInput').click());
     document.getElementById('importInput').addEventListener('change', importData);
+    
+    const predictButton = document.getElementById('predictButton');
+    const predictionResult = document.getElementById('predictionResult');
+
+    predictButton.addEventListener('click', () => {
+        const player1 = players.find(p => p.name === predictPlayer1Select.value);
+        const player2 = players.find(p => p.name === predictPlayer2Select.value);
+        
+        if (player1 && player2) {
+            const prediction = predictMatch(player1, player2);
+            predictionResult.innerHTML = `
+                <h3>Match Prediction</h3>
+                <p>Expected Goals: ${player1.name} ${prediction.player1ExpectedGoals} - ${prediction.player2ExpectedGoals} ${player2.name}</p>
+                <p>Win Probability: ${player1.name} ${prediction.player1WinProbability} - ${prediction.player2WinProbability} ${player2.name}</p>
+                <p>Draw Probability: ${prediction.drawProbability}</p>
+            `;
+        } else {
+            predictionResult.innerHTML = '<p>Please select both players for prediction.</p>';
+        }
+    });
     
     displayRankings();
     displayMatchHistory();
