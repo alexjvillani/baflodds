@@ -316,7 +316,8 @@ function calculateRatingChange(player1, player2, goals1, goals2, matchType) {
     }
   
     // Adjust based on goals conceded average
-    const goalsConcededAvg = player2.goalsConceded / (player2.wins + player2.losses + player2.draws);
+    const totalGames = player2.wins + player2.losses + player2.draws;
+    const goalsConcededAvg = totalGames > 0 ? player2.goalsConceded / totalGames : 0;
     const goalsConcededFactor = 1 + (goals1 - goalsConcededAvg) / 10;
     ratingChange *= goalsConcededFactor;
   
