@@ -7,91 +7,86 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f0f0;
+            margin: 0;
+            background-color: #222; /* Deeper dark background */
+            color: #ddd; /* Slightly softer white text */
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 1400px; /* Increased container width */
+            margin: 20px auto;
+            background-color: #333; /* Darker background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5); /* More pronounced shadow */
         }
         h1, h2 {
-            color: #333;
+            color: #eee;
+            text-align: center; /* Center headings */
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
+            background-color: #444; /* Darker table background */
+            border-radius: 6px;
+            overflow: hidden; /* Ensures border-radius is respected */
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
+            border: none; /* Removed borders */
+            padding: 14px;
             text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #555;
+            color: #fff;
             font-weight: bold;
+        }
+        td:nth-child(2) {
+            color: black; /* Player Names */
         }
         input, select, button {
             margin: 5px;
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            border: none;
             border-radius: 4px;
+            background-color: #555;
+            color: #fff;
         }
         button {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #5cb85c; /* Green button */
+            color: #fff;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #4cae4c;
         }
-        .form-section {
-            background: #f5f5f5;
+        .form-section, .prediction-section, .head-to-head-section {
+            background: #444;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
-        .prediction-section {
-            background: #e6f7ff;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        #predictionResult {
+        #predictionResult, #headToHeadStats {
             margin-top: 10px;
             padding: 10px;
-            background: #fff;
+            background: #555; /* Slightly lighter */
             border-radius: 4px;
-            border: 1px solid #ddd;
+            color: #eee;
         }
-        .head-to-head-section {
-            background: #f0f8ff; /* Light blue background */
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        .button-section {
+            text-align: center;
         }
 
-        #headToHeadStats {
-            margin-top: 10px;
-            padding: 10px;
-            background: #fff;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            text-align: left; /* Adjust text alignment as needed */
+        /* Style for alternate rows in the table */
+        tbody tr:nth-child(even) {
+            background-color: #4f4f4f;
         }
 
-        #headToHeadStats h4 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        #headToHeadStats p {
-            margin: 5px 0;
+        /* Darken row on hover */
+        tbody tr:hover {
+            background-color: #666;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
@@ -123,8 +118,7 @@
                 <option value="">Select Player 1</option>
             </select>
             <select id="predictPlayer2">
-                <option value="">Select Player 2</option>
-            </select>
+                <option value="">Select Player 2</select>
             <button id="predictButton">Predict Match</button>
             <div id="predictionResult"></div>
         </div>
@@ -161,6 +155,9 @@
                     <th>Player 2</th>
                     <th>Score</th>
                     <th>Match Type</th>
+                    <th>Rating Change</th>
+                    <th>New Rating 1</th>
+                    <th>New Rating 2</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>

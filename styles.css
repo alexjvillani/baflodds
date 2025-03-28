@@ -1,60 +1,142 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f0f0f0;
+    margin: 0; /* Reduced body margin */
+    background-color: #333; /* Dark gray background */
+    color: #fff; /* White text */
+    line-height: 1.6; /* Improved line height for readability */
 }
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 900px; /* Slightly wider container */
+    margin: 30px auto; /* Increased top and bottom margin */
+    background-color: #444; /* Darker container background */
+    padding: 30px; /* Increased container padding */
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Stronger shadow */
 }
 
 h1, h2 {
-    color: #333;
+    color: #eee; /* Lighter heading color */
+    margin-bottom: 20px; /* Increased bottom margin for headings */
+    text-align: center; /* Center align the Headings */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
+    border-radius: 8px; /* Rounded corners for the table */
+    overflow: hidden; /* Hide overflow for rounded corners to work */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4); /* Subtle shadow for the table */
 }
 
 th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
+    border: none; /* Remove borders */
+    padding: 14px; /* Increased padding */
     text-align: center;
+    color: #ddd; /* Lighter text */
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #555; /* Darker background for header */
     font-weight: bold;
+    text-transform: uppercase; /* Uppercase for header text */
+    letter-spacing: 0.05em; /* Slight letter spacing */
+}
+
+/* Add a subtle background color to alternate rows for better readability */
+tbody tr:nth-child(even) {
+    background-color: #4f4f4f;
+}
+
+/* Highlight the row on hover */
+tbody tr:hover {
+    background-color: #666;
+    transition: background-color 0.3s ease;
 }
 
 input, select, button {
     margin: 5px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 10px;
+    border: none; /* Remove border */
+    border-radius: 6px; /* More rounded corners */
+    background-color: #555; /* Darker background */
+    color: #fff; /* White text */
 }
 
 button {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #5cb85c; /* Bootstrap-like green */
+    color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #4cae4c; /* Darker shade of green */
 }
 
 .form-section {
-    background: #f5f5f5;
+    background: #555; /* Darker form background */
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     margin-bottom: 20px;
+}
+
+.prediction-section {
+    background: #555; /* Darker prediction background */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#predictionResult {
+    margin-top: 10px;
+    padding: 10px;
+    background: #666; /* Slightly lighter */
+    border-radius: 6px;
+}
+
+.head-to-head-section {
+    background: #555; /* Darker background */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+#headToHeadStats {
+    margin-top: 10px;
+    padding: 10px;
+    background: #666; /* Slightly lighter */
+    border-radius: 6px;
+    text-align: left;
+}
+
+#headToHeadStats h4 {
+    color: #eee; /* Lighter color */
+    margin-bottom: 10px;
+}
+
+#headToHeadStats p {
+    margin: 5px 0;
+}
+
+/* Styles for specific division colors */
+#rankings tbody tr td:nth-child(4) { /* Target the Division column */
+    color: #fff; /* Default text color */
+}
+
+/* Add more specificty to override the default text color */
+#rankings tbody tr td:nth-child(4).division-1 {
+    background-color: rgba(144, 238, 144, 0.3); /* LightGreen with transparency */
+    color: #90EE90; /*  LightGreen text */
+}
+
+#rankings tbody tr td:nth-child(4).division-2 {
+    background-color: rgba(255, 182, 193, 0.3); /* LightPink with transparency */
+    color: #FFB6C1; /* LightPink text */
+}
+
+#rankings tbody tr td:nth-child(4).division-3 {
+    background-color: rgba(173, 216, 230, 0.3); /* LightBlue with transparency */
+    color: #ADD8E6; /* LightBlue text */
 }

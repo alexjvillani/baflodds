@@ -267,6 +267,56 @@ let players = [
 
 let matchHistory = [];
 
+function displayRankings(initialRatings = {}) {
+    const sorted = [...players].sort((a, b) => b.rating - a.rating);
+    const tbody = document.querySelector("#rankings tbody");
+    tbody.innerHTML = "";
+    sorted.forEach((player, index) => {
+      const row = tbody.insertRow();
+      row.insertCell(0).textContent = index + 1;
+      const nameCell = row.insertCell(1);
+      nameCell.textContent = player.name;
+      nameCell.style.backgroundColor =
+        player.division === 1
+          ? "#90EE90"
+          : player.division === 2
+          ? "#FFB6C1"
+          : player.division === 3
+          ? "#ADD8E6"
+          : "";
+  
+      // Fetch the initial rating of a player from the player
+      const initialRating = initialRatings[player.name] || player.rating;
+  
+      // Display the rating of the player with a + or - according to the game
+      const ratingCell = row.insertCell(2);
+      const ratingText = Math.round(player.rating);
+      if (player.rating > initialRating) {
+        ratingCell.textContent = `+${ratingText}`;
+        ratingCell.style.color = "green"; // Green for gain
+      } else if (player.rating < initialRating) {
+        ratingCell.textContent = `-${ratingText}`;
+        ratingCell.style.color = "red"; // Red for loss
+      } else {
+        ratingCell.textContent = ratingText;
+        ratingCell.style.color = "black"; // Black for no change
+      }
+  
+      row.insertCell(3).textContent =
+        player.division === 3 ? "?" : `Division ${player.division}`;
+      row.insertCell(4).textContent = player.goalsScored;
+      row.insertCell(5).textContent = player.goalsConceded;
+      row.insertCell(6).textContent = `${player.wins}/${player.draws}/${player.losses}`;
+      row.insertCell(7).textContent = player.form.join("");
+      const totalGames = player.wins + player.draws + player.losses;
+      const winPercentage =
+        totalGames > 0
+          ? ((player.wins / totalGames) * 100).toFixed(2) + "%"
+          : "N/A";
+      row.insertCell(8).textContent = winPercentage;
+    });
+  }
+
 function calculateRatingChange(player1, player2, goals1, goals2, matchType) {
     const ratingDiff = player2.rating - player1.rating;
     const expectedScore = 1 / (1 + Math.pow(10, ratingDiff / 400));
@@ -328,117 +378,102 @@ function calculateRatingChange(player1, player2, goals1, goals2, matchType) {
       goalValue: goalValue,
     };
   }
+    
+  function updateRankings(player1, player2, goals1, goals2, matchType) {
+    const initialRating1 = player1.rating; // Store initial ratings
+    const initialRating2 = player2.rating;
   
-
-function updateRankings(player1, player2, goals1, goals2, matchType) {
-  const result = calculateRatingChange(player1, player2, goals1, goals2, matchType);
-
-  // Update ratings
-  player1.rating += Math.round(result.ratingChange);
-  player2.rating -= Math.round(result.ratingChange);
-
-  // Update goals and apply goal-based rating changes
-  player1.goalsScored += goals1;
-  player1.goalsConceded += goals2;
-  player2.goalsScored += goals2;
-  player2.goalsConceded += goals1;
-  player1.rating += Math.round(goals1 * result.goalValue);
-  player1.rating -= Math.round(goals2 * result.goalValue * 0.5);
-  player2.rating += Math.round(goals2 * result.goalValue);
-  player2.rating -= Math.round(goals1 * result.goalValue * 0.5);
-
-  // Update win/loss/draw counts and form
-  let outcome1, outcome2;
-  if (goals1 > goals2) {
-    player1.wins++;
-    player2.losses++;
-    outcome1 = "W";
-    outcome2 = "L";
-  } else if (goals1 < goals2) {
-    player1.losses++;
-    player2.wins++;
-    outcome1 = "L";
-    outcome2 = "W";
-  } else {
-    player1.draws++;
-    player2.draws++;
-    outcome1 = outcome2 = "D";
-  }
-
-  // Update form (last 5 matches)
-  player1.form.unshift(outcome1);
-  player2.form.unshift(outcome2);
-  player1.form = player1.form.slice(0, 5);
-  player2.form = player2.form.slice(0, 5);
-
-  // Ensure ratings don't go below 0
-  player1.rating = Math.max(0, player1.rating);
-  player2.rating = Math.max(0, player2.rating);
-
-  // Update match history
-  matchHistory.unshift({
-    date: new Date().toISOString(),
-    player1: player1.name,
-    player2: player2.name,
-    score: `${goals1}-${goals2}`,
-    matchType: matchType,
-  });
-
-  // Save data to local storage
-  saveData();
-}
-
-function displayRankings() {
-    const sorted = [...players].sort((a, b) => b.rating - a.rating);
-    const tbody = document.querySelector("#rankings tbody");
-    tbody.innerHTML = "";
-    sorted.forEach((player, index) => {
-        const row = tbody.insertRow();
-        row.insertCell(0).textContent = index + 1;
-        const nameCell = row.insertCell(1);
-        nameCell.textContent = player.name;
-        nameCell.style.backgroundColor = player.division === 1 ? "#90EE90" : player.division === 2 ? "#FFB6C1" : player.division === 3 ? "#ADD8E6" : "";
-        row.insertCell(2).textContent = Math.round(player.rating);
-        row.insertCell(3).textContent = player.division === 3 ? "?" : `Division ${player.division}`;
-        row.insertCell(4).textContent = player.goalsScored;
-        row.insertCell(5).textContent = player.goalsConceded;
-        row.insertCell(6).textContent = `${player.wins}/${player.draws}/${player.losses}`;
-        row.insertCell(7).textContent = player.form.join("");
-        const totalGames = player.wins + player.draws + player.losses;
-        const winPercentage = totalGames > 0 ? ((player.wins / totalGames) * 100).toFixed(2) + "%" : "N/A";
-        row.insertCell(8).textContent = winPercentage;
+    const result = calculateRatingChange(player1, player2, goals1, goals2, matchType);
+  
+    // Update ratings
+    const ratingChange = Math.round(result.ratingChange); // Round the rating change
+    player1.rating += ratingChange;
+    player2.rating -= ratingChange;
+  
+    // Update goals and apply goal-based rating changes
+    player1.goalsScored += goals1;
+    player1.goalsConceded += goals2;
+    player2.goalsScored += goals2;
+    player2.goalsConceded += goals1;
+    player1.rating += Math.round(goals1 * result.goalValue);
+    player1.rating -= Math.round(goals2 * result.goalValue * 0.5);
+    player2.rating += Math.round(goals2 * result.goalValue);
+    player2.rating -= Math.round(goals1 * result.goalValue * 0.5);
+  
+    // Update win/loss/draw counts and form
+    let outcome1, outcome2;
+    if (goals1 > goals2) {
+      player1.wins++;
+      player2.losses++;
+      outcome1 = "W";
+      outcome2 = "L";
+    } else if (goals1 < goals2) {
+      player1.losses++;
+      player2.wins++;
+      outcome1 = "L";
+      outcome2 = "W";
+    } else {
+      player1.draws++;
+      player2.draws++;
+      outcome1 = outcome2 = "D";
+    }
+  
+    // Update form (last 5 matches)
+    player1.form.unshift(outcome1);
+    player2.form.unshift(outcome2);
+    player1.form = player1.form.slice(0, 5);
+    player2.form = player2.form.slice(0, 5);
+  
+    // Ensure ratings don't go below 0
+    player1.rating = Math.max(0, player1.rating);
+    player2.rating = Math.max(0, player2.rating);
+  
+    // Update match history
+    matchHistory.unshift({
+      date: new Date().toISOString(),
+      player1: player1.name,
+      player2: player2.name,
+      score: `${goals1}-${goals2}`,
+      matchType: matchType,
+      ratingChange: ratingChange, // Store the rating change
+      newRating1: player1.rating, // Store the new ratings
+      newRating2: player2.rating
     });
-}
-
-
-
-function displayMatchHistory() {
-  const historyTable = document.getElementById("matchHistory");
-  const tbody = historyTable.querySelector("tbody");
-  tbody.innerHTML = "";
-
-  matchHistory.forEach((match, index) => {
-    const row = tbody.insertRow();
-    row.insertCell(0).textContent = new Date(match.date).toLocaleString();
-    row.insertCell(1).textContent = match.player1;
-    row.insertCell(2).textContent = match.player2;
-    row.insertCell(3).textContent = match.score;
-    row.insertCell(4).textContent = match.matchType;
-
-    // Add Edit Button
-    const editButton = document.createElement("button");
-    editButton.textContent = "Edit";
-    editButton.addEventListener("click", () => editMatch(index));
-    row.insertCell(5).appendChild(editButton);
-
-    // Add Delete Button
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", () => deleteMatch(index));
-    row.insertCell(6).appendChild(deleteButton);
-  });
-}
-
+  
+    // Save data to local storage
+    saveData();
+  }
+  
+  function displayMatchHistory() {
+    const historyTable = document.getElementById("matchHistory");
+    const tbody = historyTable.querySelector("tbody");
+    tbody.innerHTML = "";
+  
+    matchHistory.forEach((match, index) => {
+      const row = tbody.insertRow();
+      row.insertCell(0).textContent = new Date(match.date).toLocaleString();
+      row.insertCell(1).textContent = match.player1;
+      row.insertCell(2).textContent = match.player2;
+      row.insertCell(3).textContent = match.score;
+      row.insertCell(4).textContent = match.matchType;
+      row.insertCell(5).textContent = match.ratingChange;
+      row.insertCell(6).textContent = match.newRating1;
+      row.insertCell(7).textContent = match.newRating2;
+  
+  
+      // Add Edit Button
+      const editButton = document.createElement("button");
+      editButton.textContent = "Edit";
+      editButton.addEventListener("click", () => editMatch(index));
+      row.insertCell(8).appendChild(editButton);
+  
+      // Add Delete Button
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", () => deleteMatch(index));
+      row.insertCell(9).appendChild(deleteButton);
+    });
+  }
 
 document.getElementById('matchForm').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -486,8 +521,7 @@ function resetAllRankings() {
         {name: "Matthew", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: [], headToHead: {}},
         {name: "Ricardo", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: [], headToHead: {}},
         {name: "Justin", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: [], headToHead: {}},
-		{name: "Patrick", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: [], headToHead: {}},
-		{name: "aaaaaa", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: [], headToHead: {}}
+		{name: "Patrick", rating: 900, division: 2, goalsScored: 0, goalsConceded: 0, wins: 0, losses: 0, draws: 0, form: [], headToHead: {}}
     ];
     matchHistory = [];
     displayRankings();
@@ -525,19 +559,30 @@ function updateHeadToHead(player1, player2, goals1, goals2) {
 
 
 function addMatch(player1, player2, goals1, goals2, matchType) {
-  updateRankings(player1, player2, goals1, goals2, matchType);
-
-  // Add to match history
-  matchHistory.unshift({
-    date: new Date().toISOString(),
-    player1: player1.name,
-    player2: player2.name,
-    score: `${goals1}-${goals2}`,
-    matchType: matchType,
-  });
-
-  saveData();
-}
+    // Store the initial rating of the players into a variable
+    const initialRating1 = player1.rating
+    const initialRating2 = player2.rating
+  
+    updateRankings(player1, player2, goals1, goals2, matchType);
+  
+    // Calculate the rating change from the result
+    const ratingChange = player1.rating - initialRating1;
+  
+    // Add to match history
+    matchHistory.unshift({
+      date: new Date().toISOString(),
+      player1: player1.name,
+      player2: player2.name,
+      score: `${goals1}-${goals2}`,
+      matchType: matchType,
+      ratingChange: ratingChange, // ADD THIS LINE - Store the rating change
+      newRating1: player1.rating, // ADD THIS LINE - Store the new rating for player 1
+      newRating2: player2.rating,  // ADD THIS LINE - Store the new rating for player 2
+    });
+  
+    saveData();
+  }
+  
 
 function deleteMatch(index) {
   if (index >= 0 && index < matchHistory.length) {
@@ -723,40 +768,27 @@ function updateRankings(player1, player2, goals1, goals2, matchType) {
 }
 
 function revertRankings(player1, player2, goals1, goals2, matchType) {
-    const result = calculateRatingChange(player1, player2, goals1, goals2, matchType);
-    const ratingChange = Math.round(result.ratingChange);
+    const initialRating1 = player1.rating;
+    const initialRating2 = player2.rating;
 
-    let outcome1, outcome2;
-    if (goals1 > goals2) {
-        outcome1 = "W";
-        outcome2 = "L";
-    } else if (goals1 < goals2) {
-        outcome1 = "L";
-        outcome2 = "W";
-    } else {
-        outcome1 = outcome2 = "D";
-    }
+    // Calculate the initial result
+    const initialResult = calculateRatingChange(player1, player2, goals1, goals2, matchType);
 
-    // Revert form
-    if (player1.form.length > 0) {
-        player1.form.shift(); // Remove the most recent form
-    }
-    if (player2.form.length > 0) {
-        player2.form.shift(); // Remove the most recent form
-    }
-
-    player1.rating -= ratingChange;
-    player2.rating += ratingChange;
+    // Revert the ratings
+    player1.rating = initialRating1 - Math.round(initialResult.ratingChange);
+    player2.rating = initialRating2 + Math.round(initialResult.ratingChange);
 
     player1.goalsScored -= goals1;
     player1.goalsConceded -= goals2;
     player2.goalsScored -= goals2;
     player2.goalsConceded -= goals1;
-    player1.rating -= Math.round(goals1 * result.goalValue);
-    player1.rating += Math.round(goals2 * result.goalValue * 0.5);
-    player2.rating -= Math.round(goals2 * result.goalValue);
-    player2.rating += Math.round(goals1 * result.goalValue * 0.5);
 
+    player1.rating -= Math.round(goals1 * initialResult.goalValue);
+    player1.rating += Math.round(goals2 * initialResult.goalValue * 0.5);
+    player2.rating -= Math.round(goals2 * initialResult.goalValue);
+    player2.rating += Math.round(goals1 * initialResult.goalValue * 0.5);
+
+    // Revert win/loss/draw counts and form
     if (goals1 > goals2) {
         player1.wins--;
         player2.losses--;
@@ -767,7 +799,11 @@ function revertRankings(player1, player2, goals1, goals2, matchType) {
         player1.draws--;
         player2.draws--;
     }
+    // Revert form (last 5 matches) - very basic implementation
+    player1.form.shift();
+    player2.form.shift();
 
+    // Ensure ratings don't go below 0
     player1.rating = Math.max(0, player1.rating);
     player2.rating = Math.max(0, player2.rating);
 }
