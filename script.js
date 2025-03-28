@@ -268,45 +268,67 @@ let players = [
 let matchHistory = [];
 
 function calculateRatingChange(player1, player2, goals1, goals2, matchType) {
-  const ratingDiff = player2.rating - player1.rating;
-  const expectedScore = 1 / (1 + Math.pow(10, ratingDiff / 400));
-
-  let baseK;
-  switch (matchType) {
-    case "div1":
-      baseK = 30;
-      break;
-    case "div2":
-      baseK = 20;
-      break;
-    case "knockout":
-      baseK = 35;
-      break;
-    default:
-      baseK = 30;
+    const ratingDiff = player2.rating - player1.rating;
+    const expectedScore = 1 / (1 + Math.pow(10, ratingDiff / 400));
+  
+    // Adjust base K factor based on division and rank difference
+    let baseK;
+    switch (matchType) {
+      case "div1":
+        baseK = 30;
+        break;
+      case "div2":
+        baseK = 15; // Reduced impact for Division 2 matches
+        break;
+      case "knockout":
+        baseK = 35;
+        break;
+      default:
+        baseK = 30;
+    }
+  
+    // Determine outcome
+    let outcome;
+    if (goals1 > goals2) outcome = 1;
+    else if (goals1 < goals2) outcome = 0;
+    else outcome = 0.5;
+  
+    // Calculate base rating change
+    let ratingChange = baseK * (outcome - expectedScore);
+  
+    // Adjust for goal difference
+    const goalDiff = Math.abs(goals1 - goals2);
+    ratingChange *= 1 + goalDiff / 10;
+  
+    // Adjust for rank difference
+    const rankDiffFactor = 1 + Math.abs(ratingDiff) / 1000;
+    ratingChange *= rankDiffFactor;
+  
+    // Penalize higher-ranked player for losing to lower-ranked player (EVEN LESS HARSH)
+    if (player1.rating > player2.rating && outcome === 0) {
+      const rankDifference = (player1.rating - player2.rating) / 400; // Further reduced scaling factor
+      ratingChange *= (1.1 + rankDifference); // Further reduced base penalty
+    }
+  
+    // Reduce points for high-ranked player beating low-ranked player
+    if (player1.rating > player2.rating && outcome === 1) {
+      ratingChange *= 0.5;
+    }
+  
+    // Adjust based on goals conceded average
+    const goalsConcededAvg = player2.goalsConceded / (player2.wins + player2.losses + player2.draws);
+    const goalsConcededFactor = 1 + (goals1 - goalsConcededAvg) / 10;
+    ratingChange *= goalsConcededFactor;
+  
+    // Calculate goal value based on rating difference
+    const goalValue = 5 * (1 + Math.abs(ratingDiff) / 1000);
+  
+    return {
+      ratingChange: ratingChange,
+      goalValue: goalValue,
+    };
   }
-
-  // Determine outcome
-  let outcome;
-  if (goals1 > goals2) outcome = 1;
-  else if (goals1 < goals2) outcome = 0;
-  else outcome = 0.5;
-
-  // Calculate base rating change
-  let ratingChange = baseK * (outcome - expectedScore);
-
-  // Adjust for goal difference
-  const goalDiff = Math.abs(goals1 - goals2);
-  ratingChange *= 1 + goalDiff / 10;
-
-  // Calculate goal value based on rating difference
-  const goalValue = 10 * (1 + Math.abs(ratingDiff) / 1000);
-
-  return {
-    ratingChange: ratingChange,
-    goalValue: goalValue,
-  };
-}
+  
 
 function updateRankings(player1, player2, goals1, goals2, matchType) {
   const result = calculateRatingChange(player1, player2, goals1, goals2, matchType);
